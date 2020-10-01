@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class Parameters {
     
-    //public static final String PATH_TO_CSV_FILE = "C:\\91firms_rmrao\\basicmetals.csv";
-    public static final String PATH_TO_CSV_FILE = "C:\\91firms_rmrao\\paperindustries.csv";
+    public static final String PATH_TO_CSV_FILE = "C:\\91firms_rmrao\\basicmetals.csv";
+    //public static final String PATH_TO_CSV_FILE = "C:\\91firms_rmrao\\paperindustries.csv";
     //public static final String PATH_TO_CSV_FILE = "C:\\91firms_rmrao\\machinerydata.csv";
     //public static final String PATH_TO_CSV_FILE = "C:\\91firms_rmrao\\vehiclesdata.csv";
     
@@ -355,7 +355,7 @@ public class Parameters {
         }
     };
     
-    public static final  ArrayList<String> companiesOfInterest =  companiesOfInterest_Set_Machinery     ;
+    public static final  ArrayList<String> companiesOfInterest = getCcompaniesOfInterest_Steel(companiesOfInterest_BasicMetals)   ;
      
     public static final  ArrayList<String> columnsOfInterest = new ArrayList<String>() { 
             { 

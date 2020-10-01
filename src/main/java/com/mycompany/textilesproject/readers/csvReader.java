@@ -15,8 +15,11 @@ import static java.lang.System.exit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 /**
@@ -137,11 +140,12 @@ public class csvReader {
         
         squareTermCalculator.getSITJ_star_Map(fractionalCharaecters_Map, V_Map);
         
+        squareTermCalculator.getNIJT_Map (   fractionalCharaecters_Map,  V_Map);
         
-        squareTermCalculator.getIS_map(V_Map, normalizedFractionalCharacters_Map);
+        squareTermCalculator.getIS_map( squareTermCalculator.nijt_map,  fractionalCharaecters_Map);
         squareTermCalculator.getTITJ_star_Map(normalizedFractionalCharacters_Map);
         
-        squareTermCalculator.getNIJT_Map (   fractionalCharaecters_Map,  V_Map);
+        
         squareTermCalculator.getSITJ_star_Map_Alternate(V_Map, salesPerYear_Map);
         
         squareTermCalculator.getMPjt_map(fractionalCharaecters_Map, normalizedFractionalCharacters_Map, V_Map);
@@ -149,7 +153,18 @@ public class csvReader {
         squareTermCalculator.getSIT_Star(salesPerYear_Map,    V_Map);
         
         squareTermCalculator.getQIJT_map(fractionalCharaecters_Map);
-        squareTermCalculator.getJIT_map (  fractionalCharaecters_Map,  Nu_i );
+        squareTermCalculator.getJIT_map (  fractionalCharaecters_Map,  V_Map );
+        
+        squareTermCalculator.get_IIT_Map(fractionalCharaecters_Map, V_Map);
+        
+        print_IIT_Map(  squareTermCalculator.I_i_t ); 
+        //print_JIT_Map (squareTermCalculator.jit_map);
+       
+        //print_ISIT_Map(  squareTermCalculator.IS_it );
+       
+        //squareTermCalculator.compare_ISIT_IIT (   fractionalCharaecters_Map) ; 
+        
+        //print_VIT_MAP ( 2015, V_Map) ;
         
         //Histograms.get_Nu_it_histogram(Nu_i);
         //Histograms.get_ISit_histogram(squareTermCalculator.IS_it);        
@@ -219,7 +234,7 @@ public class csvReader {
         //Grapher.getNIT_stats( squareTermCalculator.nit_map);
         //Grapher.getNIJT_stats(squareTermCalculator.nijt_map,  "Garware Technical Fibres Ltd.", squareTermCalculator.nit_map);
         
-        TableCreator table = new TableCreator (
+        /*TableCreator table = new TableCreator (
         squareTermCalculator.qijt_map,
         V_Map ,
         Nu_i,
@@ -228,7 +243,7 @@ public class csvReader {
         squareTermCalculator.jit_map,
         squareTermCalculator.IS_it,
         squareTermCalculator.nit_map,rawSalesPerYear_Map ,dataItemList);
-        table.createtables();
+        table.createtables();*/
         
         
         System.out.println("Completed.") ;
@@ -384,7 +399,122 @@ public class csvReader {
         
         return result;
     }
-    
      
+    
+    private static void print_JIT_Map (Map<Integer, Map<String, Double>>  jit_map ){
+        
+        
+        
+        Set<String> comapnyNamesToUse = new  HashSet<String> ();
+        for (Map.Entry <Integer, Map<String, Double>>entry:  jit_map.entrySet()){
+            //
+            comapnyNamesToUse.addAll( entry.getValue().keySet());
+        }
+        
+        System.out.println("\n\n\n JIT MAP \n\n\n") ;
+        
+        for (int thisYear = ONE+ START_YEAR; thisYear <= END_YEAR; thisYear ++) {
+            System.out.print(","+thisYear) ;
+        }
+        System.out.println(",");
+        
+        //Map<Integer, Map<String, Double>>  jit_map 
+        for (String companyName : comapnyNamesToUse){
+            System.out.print(companyName+",") ;
+            for (int thisYear =ONE+ START_YEAR; thisYear <= END_YEAR; thisYear ++) {
+                
+                if (jit_map.get(thisYear).containsKey(companyName)){
+                    System.out.print( jit_map.get(thisYear).get(companyName)+",") ;
+                }else {
+                    System.out.print(  ",") ;
+                }
+            }
+            System.out.println();
+        }
+    }
+    
+        
+    private static void print_ISIT_Map (Map<String, Map <Integer, Double> > isit_map ) {
+        
+        //also Map <String , Map< Integer,  Double> > IS_it
+        System.out.println("\n\n\n print ISIT_Map   \n\n\n") ;
+        
+        for (int thisYear = START_YEAR; thisYear <= END_YEAR; thisYear ++) {
+            System.out.print(","+thisYear) ;
+        }
+        System.out.println(",");
+        
+        for ( Map.Entry <String, Map <Integer, Double> > entry: isit_map.entrySet())  {
+            String thisCompanyName = entry.getKey();
+            System.out.print(thisCompanyName+",") ;
+            Map <Integer, Double> innerMap = isit_map.get(thisCompanyName );
+            for (int thisYear = START_YEAR; thisYear <= END_YEAR; thisYear ++) {
+                //
+                if (innerMap.containsKey( thisYear)){
+                    System.out.print( innerMap.get( thisYear)+",") ;
+                }else {
+                    System.out.print( ",") ;
+                }
+            }
+            System.out.println();
+        }
+       
+    } 
+    
+    private static void print_IIT_Map (TreeMap<String, TreeMap <Integer, Double> > I_i_t) {
+        
+        System.out.println("\n\n\n print_IIT_Map \n\n\n") ;
+        
+        for (int thisYear = START_YEAR; thisYear <= END_YEAR; thisYear ++) {
+            System.out.print(","+thisYear) ;
+        }
+        System.out.println(",");
+        
+        for ( Map.Entry <String, TreeMap <Integer, Double> > entry: I_i_t.entrySet())  {
+            String thisCompanyName = entry.getKey();
+            System.out.print(thisCompanyName+",") ;
+            TreeMap <Integer, Double> innerMap = I_i_t.get(thisCompanyName );
+            for (int thisYear = START_YEAR; thisYear <= END_YEAR; thisYear ++) {
+                //
+                if (innerMap.containsKey( thisYear)){
+                    System.out.print( innerMap.get( thisYear)+",") ;
+                }else {
+                    System.out.print( ",") ;
+                }
+            }
+            System.out.println();
+        }
+       
+    } 
+    
+    private static void print_VIT_MAP (  int year ,  Map<String, Map<Integer, Double>>  V_Map) {
+        
+        int total = 0;
+        int negatives = 0;
+        int missing = 0;
+        
+        for ( Map.Entry<String, Map<Integer, Double>> entry : V_Map.entrySet()){
+            String thiscompany = entry.getKey();
+            
+            total ++;
+            
+            if (entry.getValue().containsKey(year)){
+                System.out.println(thiscompany + " = " + entry.getValue().get(year));
+                
+                if (0>  entry.getValue().get(year)){
+                    negatives++;
+                }
+                
+            }else {
+                System.out.println(thiscompany + "  ");
+                missing++;
+            }
+        }
+        
+        System.out.println(total + " "+ missing + " " + negatives) ;
+    }
+ 
+    
+   
     
 }//end class
